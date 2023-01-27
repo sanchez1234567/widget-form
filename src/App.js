@@ -1,5 +1,7 @@
+import WidgetButton from "./components/WidgetButton.js";
+
 function App() {
-  return <div></div>;
+  return <div>{<WidgetButton />}</div>;
 }
 
 export default App;
