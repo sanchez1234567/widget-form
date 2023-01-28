@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/mui";
-import LinearProgress from "@mui/material/LinearProgress";
-import Typography from "@mui/material/Typography";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
+import GenerateDocx from "../functions/GenerateDocx.js";
+import DownloadForms from "./DownloadForms.js";
 
 // const schema: RJSFSchema = {
 //   title: "Test form",
@@ -74,14 +74,13 @@ export default function MyForm() {
   return (
     <div>
       {JSON.stringify(forms) === "{}" ? (
-        <Typography variant="h5">
-          Загрузка формы... <LinearProgress />
-        </Typography>
+        <DownloadForms />
       ) : (
         <Form
           schema={schema}
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
+          onSubmit={() => GenerateDocx(document, formData)}
           uiSchema={uiSchema}
           validator={validator}
         />
