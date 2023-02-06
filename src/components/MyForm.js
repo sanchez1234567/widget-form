@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RJSFSchema } from "@rjsf/utils";
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/mui";
 import Docxtemplater from "docxtemplater";
@@ -25,7 +25,7 @@ export default function MyForm(props) {
       const doc = new Docxtemplater(zip, { modules: [iModule] });
       const tags = iModule.getAllTags();
       for (let key in tags) {
-        tags[key] = { type: "string", title: key.slice(4) };
+        tags[key] = { type: "string", title: key };
       }
       setFormFields(SortTags(tags));
       setDocument(doc);
@@ -42,6 +42,12 @@ export default function MyForm(props) {
     properties: formFields,
   };
 
+  const uiSchema: UiSchema = {
+    "ui:submitButtonOptions": {
+      submitText: "Скачать",
+    },
+  };
+
   return (
     <div>
       {JSON.stringify(formFields) === "{}" ? (
@@ -49,6 +55,7 @@ export default function MyForm(props) {
       ) : (
         <Form
           schema={schema}
+          uiSchema={uiSchema}
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
           onSubmit={() => GenerateDocx(document, formData)}

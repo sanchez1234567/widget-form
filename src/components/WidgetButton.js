@@ -20,7 +20,7 @@ export default function WidgetButton(props) {
         onClick={handleClickOpen}
         sx={{ margin: "10px" }}
       >
-        MyForm
+        {props.button}
       </Button>
       <Dialog open={open} onClose={handleClickClose}>
         <DialogContent>
