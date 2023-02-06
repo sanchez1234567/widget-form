@@ -1,46 +1,22 @@
 import { useState, useEffect } from "react";
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import { RJSFSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/mui";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
 import GenerateDocx from "../functions/GenerateDocx.js";
+import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
 
-// const schema: RJSFSchema = {
-//   title: "Test form",
-//   type: "object",
-//   properties: {
-//     name: {
-//       type: "string",
-//     },
-//     surname: {
-//       type: "string",
-//     },
-//     age: {
-//       type: "number",
-//     },
-//   },
-// };
-
-const uiSchema: UiSchema = {
-  name: {
-    "ui:classNames": "custom-css-class",
-  },
-  age: {
-    "ui:classNames": "custom-css-class",
-  },
-};
-
 export default function MyForm() {
-  const [forms, setForms] = useState({});
+  const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
   const [formData, setFormData] = useState(null);
 
   const generateJSON = () => {
     PizZipUtils.getBinaryContent(
-      "http://localhost/simple.docx",
+      "http://localhost/testDaData.docx",
       function (error, content) {
         if (error) {
           throw error;
@@ -51,29 +27,27 @@ export default function MyForm() {
         const doc = new Docxtemplater(zip, { modules: [iModule] });
         const tags = iModule.getAllTags();
         for (let key in tags) {
-          tags[key] = { type: "string" };
+          tags[key] = { type: "string", title: key.slice(4) };
         }
-        setForms(tags);
+        setFormFields(SortTags(tags));
         setDocument(doc);
       }
     );
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      generateJSON();
-    }, 4000);
+    generateJSON();
   }, []);
 
   const schema: RJSFSchema = {
     title: "Введите данные",
     type: "object",
-    properties: forms,
+    properties: formFields,
   };
 
   return (
     <div>
-      {JSON.stringify(forms) === "{}" ? (
+      {JSON.stringify(formFields) === "{}" ? (
         <DownloadForms />
       ) : (
         <Form
@@ -81,7 +55,6 @@ export default function MyForm() {
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
           onSubmit={() => GenerateDocx(document, formData)}
-          uiSchema={uiSchema}
           validator={validator}
         />
       )}
