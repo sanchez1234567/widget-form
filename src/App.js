@@ -1,7 +1,7 @@
 import WidgetButton from "./components/WidgetButton.js";
 
-function App() {
-  return <div>{<WidgetButton />}</div>;
+function App(props) {
+  return <div>{<WidgetButton url={props.url} />}</div>;
 }
 
 export default App;

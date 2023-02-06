@@ -2,7 +2,7 @@ import { Button, Dialog, DialogContent } from "@mui/material";
 import React, { useState } from "react";
 import MyForm from "./MyForm.js";
 
-export default function WidgetButton() {
+export default function WidgetButton(props) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -24,7 +24,7 @@ export default function WidgetButton() {
       </Button>
       <Dialog open={open} onClose={handleClickClose}>
         <DialogContent>
-          <MyForm />
+          <MyForm url={props.url} />
         </DialogContent>
       </Dialog>
     </div>
