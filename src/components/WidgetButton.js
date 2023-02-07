@@ -22,7 +22,7 @@ export default function WidgetButton(props) {
       >
         {props.button}
       </Button>
-      <Dialog open={open} onClose={handleClickClose}>
+      <Dialog open={open} onClose={handleClickClose} fullWidth={true}>
         <DialogContent>
           <MyForm url={props.url} />
         </DialogContent>
