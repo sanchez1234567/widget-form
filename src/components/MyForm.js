@@ -8,7 +8,7 @@ import PizZipUtils from "pizzip/utils/index.js";
 import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
-import { TextField, Autocomplete } from "@mui/material";
+import { TextField, Autocomplete, Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
@@ -75,14 +75,11 @@ export default function MyForm(props) {
   };
 
   const uiSchema: UiSchema = {
-    "ui:submitButtonOptions": {
-      submitText: "Скачать",
-    },
     Имя: {
       "ui:widget": (props: WidgetProps) => {
         return (
           <Autocomplete
-            freeSolo
+            //freeSolo
             options={names}
             renderInput={(params) => (
               <TextField
@@ -93,6 +90,7 @@ export default function MyForm(props) {
                     ...prevState,
                     Имя: e.target.value,
                   }));
+                  getHint(e.target.value, "name");
                 }}
               />
             )}
@@ -155,10 +153,20 @@ export default function MyForm(props) {
         <Form
           schema={schema}
           uiSchema={uiSchema}
-          onChange={(e) => setFormData(e.formData)}
           onSubmit={() => GenerateDocx(document, formData)}
           validator={validator}
-        />
+        >
+          <Box sx={{ textAlign: "right" }}>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              sx={{ mt: "15px" }}
+            >
+              Скачать
+            </Button>
+          </Box>
+        </Form>
       )}
     </div>
   );
