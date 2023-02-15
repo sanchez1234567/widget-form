@@ -8,13 +8,13 @@ import PizZipUtils from "pizzip/utils/index.js";
 import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
+import GetHints from "../functions/GetHints.js";
 import { TextField, Autocomplete, Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
-  const [formData, setFormData] = useState(null);
-  const [names, setNames] = useState([]);
+  const [formData, setFormData] = useState("");
 
   const generateJSON = (templateUrl) => {
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
@@ -37,36 +37,126 @@ export default function MyForm(props) {
     });
   };
 
-  const getHint = async (queryData, searchData) => {
-    try {
-      const response = await fetch(
-        "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",
-        {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-type": "application/json",
-            Accept: "application/json",
-            Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",
-          },
-          body: JSON.stringify({
-            query: queryData,
-            parts: [searchData.toUpperCase()],
-          }),
-        }
-      );
-      const result = await response.json();
-      const arr = await result.suggestions;
-      const resultArr = await arr.map((obj) => obj.data.name);
-      await setNames(resultArr);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     generateJSON(props.url);
   }, [props]);
+
+  const CustomNameWidget = (props: WidgetProps) => {
+    const [names, setNames] = useState([]);
+
+    const hints = async (queryData, searchData) => {
+      const response = await GetHints(queryData, searchData);
+      const data = await response.json();
+      const arr = await data.suggestions;
+      const resultArr = await arr.map((obj) => obj.data.name);
+      await setNames(resultArr);
+    };
+
+    return (
+      <Autocomplete
+        freeSolo
+        clearIcon={null}
+        options={names}
+        onInputChange={(event, newInputValue) => {
+          setFormData((prevState) => ({
+            ...prevState,
+            Имя: newInputValue,
+          }));
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={"имя"}
+            onChange={(e) => {
+              setFormData((prevState) => ({
+                ...prevState,
+                Имя: e.target.value,
+              }));
+              hints(e.target.value, "name");
+            }}
+          />
+        )}
+      />
+    );
+  };
+
+  const CustomPatronymicWidget = (props: WidgetProps) => {
+    const [patrons, setPatrons] = useState([]);
+
+    const hints = async (queryData, searchData) => {
+      const response = await GetHints(queryData, searchData);
+      const data = await response.json();
+      const arr = await data.suggestions;
+      const resultArr = await arr.map((obj) => obj.data.patronymic);
+      await setPatrons(resultArr);
+    };
+
+    return (
+      <Autocomplete
+        freeSolo
+        clearIcon={null}
+        options={patrons}
+        onInputChange={(event, newInputValue) => {
+          setFormData((prevState) => ({
+            ...prevState,
+            Отчество: newInputValue,
+          }));
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={"отчество"}
+            onChange={(e) => {
+              setFormData((prevState) => ({
+                ...prevState,
+                Отчество: e.target.value,
+              }));
+              hints(e.target.value, "patronymic");
+            }}
+          />
+        )}
+      />
+    );
+  };
+
+  const CustomSurnameWidget = (props: WidgetProps) => {
+    const [surnames, setSurnames] = useState([]);
+
+    const hints = async (queryData, searchData) => {
+      const response = await GetHints(queryData, searchData);
+      const data = await response.json();
+      const arr = await data.suggestions;
+      const resultArr = await arr.map((obj) => obj.data.surname);
+      await setSurnames(resultArr);
+    };
+
+    return (
+      <Autocomplete
+        freeSolo
+        clearIcon={null}
+        options={surnames}
+        onInputChange={(event, newInputValue) => {
+          setFormData((prevState) => ({
+            ...prevState,
+            Фамилия: newInputValue,
+          }));
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={"фамилия"}
+            onChange={(e) => {
+              setFormData((prevState) => ({
+                ...prevState,
+                Фамилия: e.target.value,
+              }));
+              hints(e.target.value, "surname");
+            }}
+          />
+        )}
+      />
+    );
+  };
 
   const schema: RJSFSchema = {
     title: "Введите данные",
@@ -76,74 +166,15 @@ export default function MyForm(props) {
 
   const uiSchema: UiSchema = {
     Имя: {
-      "ui:widget": (props: WidgetProps) => {
-        return (
-          <Autocomplete
-            //freeSolo
-            options={names}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={"имя"}
-                onChange={(e) => {
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    Имя: e.target.value,
-                  }));
-                  getHint(e.target.value, "name");
-                }}
-              />
-            )}
-          />
-        );
-      },
+      "ui:widget": CustomNameWidget,
     },
     Отчество: {
-      "ui:widget": (props: WidgetProps) => {
-        return (
-          <Autocomplete
-            freeSolo
-            options={names}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={"отчество"}
-                onChange={(e) =>
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    Отчество: e.target.value,
-                  }))
-                }
-              />
-            )}
-          />
-        );
-      },
+      "ui:widget": CustomPatronymicWidget,
     },
     Фамилия: {
-      "ui:widget": (props: WidgetProps) => {
-        return (
-          <Autocomplete
-            freeSolo
-            options={names}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={"фамилия"}
-                onChange={(e) =>
-                  setFormData((prevState) => ({
-                    ...prevState,
-                    Фамилия: e.target.value,
-                  }))
-                }
-              />
-            )}
-          />
-        );
-      },
+      "ui:widget": CustomSurnameWidget,
     },
   };
-  console.log(names);
 
   return (
     <div>
