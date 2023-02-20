@@ -9,7 +9,8 @@ import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
 import GetHints from "../functions/GetHints.js";
-import { TextField, Autocomplete, Button, Box } from "@mui/material";
+import HintOptions from "./HintOptions.js";
+import { Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
@@ -48,32 +49,7 @@ export default function MyForm(props) {
       GetHints(queryData, searchData).then((res) => setNames(res));
     };
 
-    return (
-      <Autocomplete
-        freeSolo
-        clearIcon={null}
-        options={names}
-        onInputChange={(event, newInputValue) => {
-          setFormData((prevState) => ({
-            ...prevState,
-            имя: newInputValue,
-          }));
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={"имя"}
-            onChange={(e) => {
-              setFormData((prevState) => ({
-                ...prevState,
-                имя: e.target.value,
-              }));
-              hints(e.target.value, "name");
-            }}
-          />
-        )}
-      />
-    );
+    return HintOptions(names, "имя", setFormData, hints, "name");
   };
 
   const CustomPatronymicWidget = (props: WidgetProps) => {
@@ -83,32 +59,7 @@ export default function MyForm(props) {
       GetHints(queryData, searchData).then((res) => setPatrons(res));
     };
 
-    return (
-      <Autocomplete
-        freeSolo
-        clearIcon={null}
-        options={patrons}
-        onInputChange={(event, newInputValue) => {
-          setFormData((prevState) => ({
-            ...prevState,
-            отчество: newInputValue,
-          }));
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={"отчество"}
-            onChange={(e) => {
-              setFormData((prevState) => ({
-                ...prevState,
-                отчество: e.target.value,
-              }));
-              hints(e.target.value, "patronymic");
-            }}
-          />
-        )}
-      />
-    );
+    return HintOptions(patrons, "отчество", setFormData, hints, "patronymic");
   };
 
   const CustomSurnameWidget = (props: WidgetProps) => {
@@ -118,33 +69,9 @@ export default function MyForm(props) {
       GetHints(queryData, searchData).then((res) => setSurnames(res));
     };
 
-    return (
-      <Autocomplete
-        freeSolo
-        clearIcon={null}
-        options={surnames}
-        onInputChange={(event, newInputValue) => {
-          setFormData((prevState) => ({
-            ...prevState,
-            фамилия: newInputValue,
-          }));
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={"фамилия"}
-            onChange={(e) => {
-              setFormData((prevState) => ({
-                ...prevState,
-                фамилия: e.target.value,
-              }));
-              hints(e.target.value, "surname");
-            }}
-          />
-        )}
-      />
-    );
+    return HintOptions(surnames, "фамилия", setFormData, hints, "surname");
   };
+  console.log(formData);
 
   const schema: RJSFSchema = {
     title: "Введите данные",
