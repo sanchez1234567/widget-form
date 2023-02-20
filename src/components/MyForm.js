@@ -56,7 +56,7 @@ export default function MyForm(props) {
         onInputChange={(event, newInputValue) => {
           setFormData((prevState) => ({
             ...prevState,
-            Имя: newInputValue,
+            имя: newInputValue,
           }));
         }}
         renderInput={(params) => (
@@ -66,7 +66,7 @@ export default function MyForm(props) {
             onChange={(e) => {
               setFormData((prevState) => ({
                 ...prevState,
-                Имя: e.target.value,
+                имя: e.target.value,
               }));
               hints(e.target.value, "name");
             }}
@@ -91,7 +91,7 @@ export default function MyForm(props) {
         onInputChange={(event, newInputValue) => {
           setFormData((prevState) => ({
             ...prevState,
-            Отчество: newInputValue,
+            отчество: newInputValue,
           }));
         }}
         renderInput={(params) => (
@@ -101,7 +101,7 @@ export default function MyForm(props) {
             onChange={(e) => {
               setFormData((prevState) => ({
                 ...prevState,
-                Отчество: e.target.value,
+                отчество: e.target.value,
               }));
               hints(e.target.value, "patronymic");
             }}
@@ -126,7 +126,7 @@ export default function MyForm(props) {
         onInputChange={(event, newInputValue) => {
           setFormData((prevState) => ({
             ...prevState,
-            Фамилия: newInputValue,
+            фамилия: newInputValue,
           }));
         }}
         renderInput={(params) => (
@@ -136,7 +136,7 @@ export default function MyForm(props) {
             onChange={(e) => {
               setFormData((prevState) => ({
                 ...prevState,
-                Фамилия: e.target.value,
+                фамилия: e.target.value,
               }));
               hints(e.target.value, "surname");
             }}
@@ -153,13 +153,13 @@ export default function MyForm(props) {
   };
 
   const uiSchema: UiSchema = {
-    Имя: {
+    имя: {
       "ui:widget": CustomNameWidget,
     },
-    Отчество: {
+    отчество: {
       "ui:widget": CustomPatronymicWidget,
     },
-    Фамилия: {
+    фамилия: {
       "ui:widget": CustomSurnameWidget,
     },
   };
