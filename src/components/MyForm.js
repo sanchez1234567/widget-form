@@ -44,12 +44,8 @@ export default function MyForm(props) {
   const CustomNameWidget = (props: WidgetProps) => {
     const [names, setNames] = useState([]);
 
-    const hints = async (queryData, searchData) => {
-      const response = await GetHints(queryData, searchData);
-      const data = await response.json();
-      const arr = await data.suggestions;
-      const resultArr = await arr.map((obj) => obj.data.name);
-      await setNames(resultArr);
+    const hints = (queryData, searchData) => {
+      GetHints(queryData, searchData).then((res) => setNames(res));
     };
 
     return (
@@ -83,12 +79,8 @@ export default function MyForm(props) {
   const CustomPatronymicWidget = (props: WidgetProps) => {
     const [patrons, setPatrons] = useState([]);
 
-    const hints = async (queryData, searchData) => {
-      const response = await GetHints(queryData, searchData);
-      const data = await response.json();
-      const arr = await data.suggestions;
-      const resultArr = await arr.map((obj) => obj.data.patronymic);
-      await setPatrons(resultArr);
+    const hints = (queryData, searchData) => {
+      GetHints(queryData, searchData).then((res) => setPatrons(res));
     };
 
     return (
@@ -122,12 +114,8 @@ export default function MyForm(props) {
   const CustomSurnameWidget = (props: WidgetProps) => {
     const [surnames, setSurnames] = useState([]);
 
-    const hints = async (queryData, searchData) => {
-      const response = await GetHints(queryData, searchData);
-      const data = await response.json();
-      const arr = await data.suggestions;
-      const resultArr = await arr.map((obj) => obj.data.surname);
-      await setSurnames(resultArr);
+    const hints = (queryData, searchData) => {
+      GetHints(queryData, searchData).then((res) => setSurnames(res));
     };
 
     return (

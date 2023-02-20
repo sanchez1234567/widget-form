@@ -16,7 +16,10 @@ export default async function GetHints(queryData, searchData) {
         }),
       }
     );
-    return response;
+    const data = await response.json();
+    const arr = await data.suggestions;
+    const resultArr = await arr.map((obj) => obj.data[`${searchData}`]);
+    return resultArr;
   } catch (err) {
     console.log(err);
   }
