@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/mui";
 import Docxtemplater from "docxtemplater";
@@ -9,7 +9,7 @@ import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
 import GetHints from "../functions/GetHints.js";
-import HintOptions from "./HintOptions.js";
+import HintForm from "./HintForm.js";
 import { Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
@@ -42,36 +42,35 @@ export default function MyForm(props) {
     generateJSON(props.url);
   }, [props]);
 
-  const CustomNameWidget = (props: WidgetProps) => {
+  const CustomNameWidget = () => {
     const [names, setNames] = useState([]);
 
     const hints = (queryData, searchData) => {
       GetHints(queryData, searchData).then((res) => setNames(res));
     };
 
-    return HintOptions(names, "имя", setFormData, hints, "name");
+    return HintForm(names, "имя", setFormData, hints, "name");
   };
 
-  const CustomPatronymicWidget = (props: WidgetProps) => {
+  const CustomPatronymicWidget = () => {
     const [patrons, setPatrons] = useState([]);
 
     const hints = (queryData, searchData) => {
       GetHints(queryData, searchData).then((res) => setPatrons(res));
     };
 
-    return HintOptions(patrons, "отчество", setFormData, hints, "patronymic");
+    return HintForm(patrons, "отчество", setFormData, hints, "patronymic");
   };
 
-  const CustomSurnameWidget = (props: WidgetProps) => {
+  const CustomSurnameWidget = () => {
     const [surnames, setSurnames] = useState([]);
 
     const hints = (queryData, searchData) => {
       GetHints(queryData, searchData).then((res) => setSurnames(res));
     };
 
-    return HintOptions(surnames, "фамилия", setFormData, hints, "surname");
+    return HintForm(surnames, "фамилия", setFormData, hints, "surname");
   };
-  console.log(formData);
 
   const schema: RJSFSchema = {
     title: "Введите данные",

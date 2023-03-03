@@ -1,6 +1,6 @@
 import { TextField, Autocomplete } from "@mui/material";
 
-export default function HintOptions(options, label, setFunc, hintFunc, search) {
+export default function HintForm(options, label, setFunc, hintFunc, search) {
   return (
     <Autocomplete
       freeSolo
