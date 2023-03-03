@@ -16,8 +16,9 @@ export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
   const [formData, setFormData] = useState("");
+  const [schemeF, setSchemeF] = useState({});
 
-  const generateJSON = (templateUrl) => {
+  const getTags = (templateUrl) => {
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
         throw error;
@@ -27,20 +28,45 @@ export default function MyForm(props) {
       const iModule = InspectModule();
       const doc = new Docxtemplater(zip, { modules: [iModule] });
       const tags = iModule.getAllTags();
-      for (let key in tags) {
-        tags[key] = {
-          type: "string",
-          title: key,
-        };
-      }
+      // for (let key in tags) {
+      //   tags[key] = {
+      //     type: "string",
+      //     title: key,
+      //   };
+      // }
       setFormFields(SortTags(tags));
       setDocument(doc);
     });
   };
 
+  const generateScheme = async (tagList) => {
+    const response = await fetch("http://localhost/formList.json");
+    const result = await response.json();
+    for (let tag in tagList) {
+      if (Object.keys(result).includes(String(tag))) {
+        setSchemeF((prev) => ({
+          ...prev,
+          [tag]: result[tag],
+        }));
+      } else {
+        setSchemeF((prev) => ({
+          ...prev,
+          [tag]: {
+            type: "string",
+            title: `${tag}`,
+          },
+        }));
+      }
+    }
+  };
+
   useEffect(() => {
-    generateJSON(props.url);
+    getTags(props.url);
   }, [props]);
+
+  useEffect(() => {
+    generateScheme(formFields);
+  }, [formFields]);
 
   const CustomNameWidget = () => {
     const [names, setNames] = useState([]);
@@ -75,7 +101,7 @@ export default function MyForm(props) {
   const schema: RJSFSchema = {
     title: "Введите данные",
     type: "object",
-    properties: formFields,
+    properties: schemeF,
   };
 
   const uiSchema: UiSchema = {
