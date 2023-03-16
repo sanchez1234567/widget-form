@@ -21,6 +21,6 @@ export default async function GetHints(queryData, searchData) {
     const resultArr = await arr.map((obj) => obj.data[`${searchData}`]);
     return resultArr;
   } catch (err) {
-    console.log(err);
+    return [];
   }
 }
