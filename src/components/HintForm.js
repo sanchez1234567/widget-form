@@ -16,11 +16,7 @@ export default function HintForm(options, label, setFunc, hintFunc, search) {
         <TextField
           {...params}
           label={label}
-          onChange={(e) => {
-            setFunc((prevState) => ({
-              ...prevState,
-              [label]: e.target.value,
-            }));
+          onKeyUp={(e) => {
             hintFunc(e.target.value, search);
           }}
         />

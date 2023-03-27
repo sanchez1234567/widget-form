@@ -15,8 +15,14 @@ import { Button, Box } from "@mui/material";
 export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
-  const [formData, setFormData] = useState("");
+  const [formData, setFormData] = useState({});
   const [schemeF, setSchemeF] = useState({});
+
+  let searchLabels = {
+    имя: "name",
+    фамилия: "surname",
+    отчество: "patronymic",
+  };
 
   const getTags = (templateUrl) => {
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
@@ -28,33 +34,25 @@ export default function MyForm(props) {
       const iModule = InspectModule();
       const doc = new Docxtemplater(zip, { modules: [iModule] });
       const tags = iModule.getAllTags();
-      // for (let key in tags) {
-      //   tags[key] = {
-      //     type: "string",
-      //     title: key,
-      //   };
-      // }
       setFormFields(SortTags(tags));
       setDocument(doc);
     });
   };
 
   const generateScheme = async (tagList) => {
-    const response = await fetch("http://localhost/formList.json");
+    const response = await fetch("http://localhost/formList.json?time=1");
     const result = await response.json();
     for (let tag in tagList) {
-      if (Object.keys(result).includes(String(tag))) {
+      if (result.schema[tag]) {
         setSchemeF((prev) => ({
           ...prev,
-          [tag]: result[tag],
+          [tag]: result.schema[tag],
         }));
-      } else {
+      }
+      if (!result.schema[tag]) {
         setSchemeF((prev) => ({
           ...prev,
-          [tag]: {
-            type: "string",
-            title: `${tag}`,
-          },
+          [tag]: { type: "string", title: [tag] },
         }));
       }
     }
@@ -68,34 +66,25 @@ export default function MyForm(props) {
     generateScheme(formFields);
   }, [formFields]);
 
-  const CustomNameWidget = () => {
-    const [names, setNames] = useState([]);
+  const CustomFieldWidget = ({ label }) => {
+    const [oHint, setHint] = useState({});
 
     const hints = (queryData, searchData) => {
-      GetHints(queryData, searchData).then((res) => setNames(res));
+      GetHints(queryData, searchData).then((aRes) =>
+        setHint((prevState) => ({
+          ...prevState,
+          [label]: aRes,
+        }))
+      );
     };
 
-    return HintForm(names, "имя", setFormData, hints, "name");
-  };
-
-  const CustomPatronymicWidget = () => {
-    const [patrons, setPatrons] = useState([]);
-
-    const hints = (queryData, searchData) => {
-      GetHints(queryData, searchData).then((res) => setPatrons(res));
-    };
-
-    return HintForm(patrons, "отчество", setFormData, hints, "patronymic");
-  };
-
-  const CustomSurnameWidget = () => {
-    const [surnames, setSurnames] = useState([]);
-
-    const hints = (queryData, searchData) => {
-      GetHints(queryData, searchData).then((res) => setSurnames(res));
-    };
-
-    return HintForm(surnames, "фамилия", setFormData, hints, "surname");
+    return HintForm(
+      oHint[label] || [],
+      label,
+      setFormData,
+      hints,
+      searchLabels[label]
+    );
   };
 
   const schema: RJSFSchema = {
@@ -106,13 +95,16 @@ export default function MyForm(props) {
 
   const uiSchema: UiSchema = {
     имя: {
-      "ui:widget": CustomNameWidget,
-    },
-    отчество: {
-      "ui:widget": CustomPatronymicWidget,
+      "ui:widget": CustomFieldWidget,
+      "ui:options": "имя",
     },
     фамилия: {
-      "ui:widget": CustomSurnameWidget,
+      "ui:widget": CustomFieldWidget,
+      "ui:options": "фамилия",
+    },
+    отчество: {
+      "ui:widget": CustomFieldWidget,
+      "ui:options": "отчество",
     },
   };
 
@@ -123,9 +115,10 @@ export default function MyForm(props) {
       ) : (
         <Form
           schema={schema}
-          uiSchema={uiSchema}
           onSubmit={() => GenerateDocx(document, formData)}
+          uiSchema={uiSchema}
           validator={validator}
+          onChange={(e) => setFormData(e.formData)}
         >
           <Box sx={{ textAlign: "right" }}>
             <Button
