@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import { RJSFSchema, UiSchema, WidgetProps } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 import Form from "@rjsf/mui";
 import Docxtemplater from "docxtemplater";
@@ -9,7 +9,8 @@ import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
 import GetHints from "../functions/GetHints.js";
-import HintForm from "./HintForm.js";
+import HintField from "./HintField.js";
+import NoHintField from "./NoHintField.js";
 import { Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
@@ -51,24 +52,38 @@ export default function MyForm(props) {
           ...prev,
           [key]: {
             "ui:widget": fWidget,
-            "ui:options": { label: key },
+            "ui:options": {
+              label: key,
+              isHint: true,
+              fHint:
+                'fetch(\n      "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",\n      {\n        method: "POST",\n        mode: "cors",\n        headers: {\n          "Content-type": "application/json",\n          Accept: "application/json",\n          Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",\n        },\n        body: JSON.stringify({\n          query: queryData,\n          parts: ["NAME"],\n        }),\n      }\n    )',
+            },
           },
         }));
       }
       if (!jTags.schema[key]) {
         setSchema((prev) => ({
           ...prev,
-          [key]: { type: "string", title: [key] },
+          [key]: { type: "string", title: key },
+        }));
+        setUiSchema((prev) => ({
+          ...prev,
+          [key]: {
+            "ui:widget": fWidget,
+            "ui:options": { label: key, isHint: false },
+          },
         }));
       }
     }
   };
 
-  const CustomFieldWidget = ({ label }) => {
+  const CustomFieldWidget = (props: WidgetProps) => {
+    const { options } = props;
+    const { label, isHint, fHint } = options;
     const [oHint, setHint] = useState({});
 
     const hints = (queryData) => {
-      GetHints(queryData).then((aRes) =>
+      GetHints(queryData, fHint).then((aRes) =>
         setHint((prevState) => ({
           ...prevState,
           [label]: aRes,
@@ -76,8 +91,11 @@ export default function MyForm(props) {
       );
     };
 
-    return HintForm(oHint[label] || [], label, setFormData, hints);
+    return isHint
+      ? HintField(oHint[label] || [], label, setFormData, hints)
+      : NoHintField(label);
   };
+  console.log(formData);
 
   useEffect(() => {
     getTags(props.url);
