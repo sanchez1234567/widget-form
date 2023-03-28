@@ -16,13 +16,8 @@ export default function MyForm(props) {
   const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
   const [formData, setFormData] = useState({});
-  const [schemeF, setSchemeF] = useState({});
-
-  let searchLabels = {
-    имя: "name",
-    фамилия: "surname",
-    отчество: "patronymic",
-  };
+  const [oSchema, setSchema] = useState({});
+  const [oUiSchema, setUiSchema] = useState({});
 
   const getTags = (templateUrl) => {
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
@@ -39,38 +34,41 @@ export default function MyForm(props) {
     });
   };
 
-  const generateScheme = async (tagList) => {
+  const getScheme = async (tagList, makeFunc, widgetFunc) => {
     const response = await fetch("http://localhost/formList.json?time=1");
     const result = await response.json();
-    for (let tag in tagList) {
-      if (result.schema[tag]) {
-        setSchemeF((prev) => ({
+    makeFunc(tagList, result, widgetFunc);
+  };
+
+  const makeJsonSchema = (wTags, jTags, fWidget) => {
+    for (let key in wTags) {
+      if (jTags.schema[key]) {
+        setSchema((prev) => ({
           ...prev,
-          [tag]: result.schema[tag],
+          [key]: jTags.schema[key],
+        }));
+        setUiSchema((prev) => ({
+          ...prev,
+          [key]: {
+            "ui:widget": fWidget,
+            "ui:options": { label: key },
+          },
         }));
       }
-      if (!result.schema[tag]) {
-        setSchemeF((prev) => ({
+      if (!jTags.schema[key]) {
+        setSchema((prev) => ({
           ...prev,
-          [tag]: { type: "string", title: [tag] },
+          [key]: { type: "string", title: [key] },
         }));
       }
     }
   };
 
-  useEffect(() => {
-    getTags(props.url);
-  }, [props]);
-
-  useEffect(() => {
-    generateScheme(formFields);
-  }, [formFields]);
-
   const CustomFieldWidget = ({ label }) => {
     const [oHint, setHint] = useState({});
 
-    const hints = (queryData, searchData) => {
-      GetHints(queryData, searchData).then((aRes) =>
+    const hints = (queryData) => {
+      GetHints(queryData).then((aRes) =>
         setHint((prevState) => ({
           ...prevState,
           [label]: aRes,
@@ -78,35 +76,24 @@ export default function MyForm(props) {
       );
     };
 
-    return HintForm(
-      oHint[label] || [],
-      label,
-      setFormData,
-      hints,
-      searchLabels[label]
-    );
+    return HintForm(oHint[label] || [], label, setFormData, hints);
   };
+
+  useEffect(() => {
+    getTags(props.url);
+  }, [props]);
+
+  useEffect(() => {
+    getScheme(formFields, makeJsonSchema, CustomFieldWidget);
+  }, [formFields]);
 
   const schema: RJSFSchema = {
     title: "Введите данные",
     type: "object",
-    properties: schemeF,
+    properties: oSchema,
   };
 
-  const uiSchema: UiSchema = {
-    имя: {
-      "ui:widget": CustomFieldWidget,
-      "ui:options": "имя",
-    },
-    фамилия: {
-      "ui:widget": CustomFieldWidget,
-      "ui:options": "фамилия",
-    },
-    отчество: {
-      "ui:widget": CustomFieldWidget,
-      "ui:options": "отчество",
-    },
-  };
+  const uiSchema: UiSchema = oUiSchema;
 
   return (
     <div>

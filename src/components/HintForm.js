@@ -1,6 +1,6 @@
 import { TextField, Autocomplete } from "@mui/material";
 
-export default function HintForm(options, label, setFunc, hintFunc, search) {
+export default function HintForm(options, label, setFunc, hintFunc) {
   return (
     <Autocomplete
       freeSolo
@@ -17,7 +17,7 @@ export default function HintForm(options, label, setFunc, hintFunc, search) {
           {...params}
           label={label}
           onKeyUp={(e) => {
-            hintFunc(e.target.value, search);
+            hintFunc(e.target.value);
           }}
         />
       )}
