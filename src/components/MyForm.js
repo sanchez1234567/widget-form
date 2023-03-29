@@ -10,7 +10,6 @@ import SortTags from "../functions/SortTags.js";
 import DownloadForms from "./DownloadForms.js";
 import GetHints from "../functions/GetHints.js";
 import HintField from "./HintField.js";
-import NoHintField from "./NoHintField.js";
 import { Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
@@ -54,9 +53,8 @@ export default function MyForm(props) {
             "ui:widget": fWidget,
             "ui:options": {
               label: key,
-              isHint: true,
               fHint:
-                'fetch(\n      "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",\n      {\n        method: "POST",\n        mode: "cors",\n        headers: {\n          "Content-type": "application/json",\n          Accept: "application/json",\n          Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",\n        },\n        body: JSON.stringify({\n          query: queryData,\n          parts: ["NAME"],\n        }),\n      }\n    )',
+                'const response = fetch(\n      "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",\n      {\n        method: "POST",\n        mode: "cors",\n        headers: {\n          "Content-type": "application/json",\n          Accept: "application/json",\n          Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",\n        },\n        body: JSON.stringify({ query: queryData, parts: ["NAME"] }),\n      }\n    );\n    const data = response.json();\n    const arr = data.suggestions;\n    const resultArr = arr.map((obj) => obj.data[\'name\'])',
             },
           },
         }));
@@ -70,7 +68,7 @@ export default function MyForm(props) {
           ...prev,
           [key]: {
             "ui:widget": fWidget,
-            "ui:options": { label: key, isHint: false },
+            "ui:options": { label: key },
           },
         }));
       }
@@ -79,7 +77,7 @@ export default function MyForm(props) {
 
   const CustomFieldWidget = (props: WidgetProps) => {
     const { options } = props;
-    const { label, isHint, fHint } = options;
+    const { label, fHint } = options;
     const [oHint, setHint] = useState({});
 
     const hints = (queryData) => {
@@ -91,11 +89,8 @@ export default function MyForm(props) {
       );
     };
 
-    return isHint
-      ? HintField(oHint[label] || [], label, setFormData, hints)
-      : NoHintField(label);
+    return HintField(oHint[label] || [], label, setFormData, hints);
   };
-  console.log(formData);
 
   useEffect(() => {
     getTags(props.url);
