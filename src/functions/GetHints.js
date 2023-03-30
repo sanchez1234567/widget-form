@@ -1,7 +1,10 @@
 export default async function GetHints(queryData, fFetch) {
   try {
-    const strFetch = await fFetch;
-    return eval(strFetch);
+    if (queryData.length >= 1) {
+      const strFetch = await fFetch;
+      return eval(strFetch);
+    }
+    // return fetch(
     //   "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",
     //   {
     //     method: "POST",
@@ -11,12 +14,12 @@ export default async function GetHints(queryData, fFetch) {
     //       Accept: "application/json",
     //       Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",
     //     },
-    //     body: JSON.stringify({ query: queryData, parts: ["NAME"] }),
+    //     body: JSON.stringify({ query: queryData }),
     //   }
     // )
-    // .then((res) => res.json())
-    // .then((arr) => arr.suggestions)
-    // .then((resultArr) => resultArr.map((obj) => obj.data["name"]));
+    //   .then((res) => res.json())
+    //   .then((arr) => arr.suggestions)
+    //   .then((resultArr) => resultArr.map((obj) => obj.value));
   } catch (err) {
     return [];
   }
