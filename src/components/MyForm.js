@@ -37,7 +37,7 @@ export default function MyForm(props) {
   const getScheme = async (tagList, makeFunc, widgetFunc) => {
     const response = await fetch("http://localhost/formList.json?time=1");
     const result = await response.json();
-    makeFunc(tagList, result, widgetFunc);
+    await makeFunc(tagList, result, widgetFunc);
   };
 
   const makeJsonSchema = (wTags, jTags, fWidget) => {
@@ -51,11 +51,7 @@ export default function MyForm(props) {
           ...prev,
           [key]: {
             "ui:widget": fWidget,
-            "ui:options": {
-              label: key,
-              fHint:
-                'const response = fetch(\n      "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",\n      {\n        method: "POST",\n        mode: "cors",\n        headers: {\n          "Content-type": "application/json",\n          Accept: "application/json",\n          Authorization: "Token e872e6c5ccffdb498f813d862955af8f1a4fa997",\n        },\n        body: JSON.stringify({ query: queryData, parts: ["NAME"] }),\n      }\n    );\n    const data = response.json();\n    const arr = data.suggestions;\n    const resultArr = arr.map((obj) => obj.data[\'name\'])',
-            },
+            "ui:options": jTags.uischema[key]["uiOptions"],
           },
         }));
       }

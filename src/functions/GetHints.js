@@ -1,8 +1,7 @@
 export default async function GetHints(queryData, fFetch) {
   try {
     const strFetch = await fFetch;
-    const resultArr = await eval(strFetch);
-    // const response = await fetch(
+    return eval(strFetch);
     //   "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fio",
     //   {
     //     method: "POST",
@@ -14,11 +13,10 @@ export default async function GetHints(queryData, fFetch) {
     //     },
     //     body: JSON.stringify({ query: queryData, parts: ["NAME"] }),
     //   }
-    // );
-    // const data = await response.json();
-    // const arr = await data.suggestions;
-    // const resultArr = await arr.map((obj) => obj.data[`name`]);
-    return resultArr;
+    // )
+    // .then((res) => res.json())
+    // .then((arr) => arr.suggestions)
+    // .then((resultArr) => resultArr.map((obj) => obj.data["name"]));
   } catch (err) {
     return [];
   }
