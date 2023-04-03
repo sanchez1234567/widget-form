@@ -97,7 +97,7 @@ export default function MyForm(props) {
   }, [formFields]);
 
   const schema: RJSFSchema = {
-    title: "Введите данные",
+    title: "Введите данные (* обязательные поля)",
     type: "object",
     properties: oSchema,
   };

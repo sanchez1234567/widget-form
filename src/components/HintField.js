@@ -14,6 +14,7 @@ export default function HintField(options, label, setFunc, hintFunc) {
       }}
       renderInput={(params) => (
         <TextField
+          required
           {...params}
           label={label}
           onKeyUp={(e) => {
