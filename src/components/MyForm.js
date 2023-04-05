@@ -13,13 +13,12 @@ import HintField from "./HintField.js";
 import { Button, Box } from "@mui/material";
 
 export default function MyForm(props) {
-  const [formFields, setFormFields] = useState({});
   const [document, setDocument] = useState([]);
   const [formData, setFormData] = useState({});
   const [oSchema, setSchema] = useState({});
   const [oUiSchema, setUiSchema] = useState({});
 
-  const getTags = (templateUrl) => {
+  const docTjSchema = (templateUrl, fSchema, pSchema, cWidget) => {
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
         throw error;
@@ -29,18 +28,13 @@ export default function MyForm(props) {
       const iModule = InspectModule();
       const doc = new Docxtemplater(zip, { modules: [iModule] });
       const tags = iModule.getAllTags();
-      setFormFields(SortTags(tags));
+      const sortTags = SortTags(tags);
       setDocument(doc);
+      fSchema(sortTags, pSchema, cWidget);
     });
   };
 
-  const getScheme = async (tagList, makeFunc, widgetFunc) => {
-    const response = await fetch("http://localhost/formList.json?time=1");
-    const result = await response.json();
-    await makeFunc(tagList, result, widgetFunc);
-  };
-
-  const makeJsonSchema = (wTags, jTags, fWidget) => {
+  const makeSchema = (wTags, jTags, fWidget) => {
     for (let key in wTags) {
       if (jTags.schema[key]) {
         setSchema((prev) => ({
@@ -89,12 +83,8 @@ export default function MyForm(props) {
   };
 
   useEffect(() => {
-    getTags(props.url);
+    docTjSchema(props.url, makeSchema, props.jSchema, CustomFieldWidget);
   }, [props]);
-
-  useEffect(() => {
-    getScheme(formFields, makeJsonSchema, CustomFieldWidget);
-  }, [formFields]);
 
   const schema: RJSFSchema = {
     title: "Введите данные (* обязательные поля)",
@@ -106,7 +96,7 @@ export default function MyForm(props) {
 
   return (
     <div>
-      {JSON.stringify(formFields) === "{}" ? (
+      {JSON.stringify(props.jSchema) === "{}" ? (
         <DownloadForms />
       ) : (
         <Form
