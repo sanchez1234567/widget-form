@@ -10,6 +10,7 @@ import SortTags from "../functions/SortTags.js";
 import LoadingForms from "./LoadingForms.js";
 import ErrorMessage from "./ErrorMessage.js";
 import GetHints from "../functions/GetHints.js";
+import FetchErrDoc from "../functions/FetchErrDoc.js";
 import HintField from "./HintField.js";
 import { Button, Box } from "@mui/material";
 
@@ -28,9 +29,7 @@ export default function MyForm(props) {
     setIsLoad(true);
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
-        console.log(error);
-        setIsLoad(false);
-        setIsError(true);
+        FetchErrDoc(error, setMsgErr, setIsError, setIsLoad);
       }
       let zip = new PizZip(content);
       const InspectModule = require("docxtemplater/js/inspect-module");

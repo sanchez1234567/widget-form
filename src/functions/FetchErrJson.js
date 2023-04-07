@@ -4,8 +4,14 @@ export default function FetchErrJson(fErr, fMsg, fIsErr, fColor, fName) {
     fColor("error");
     fIsErr(true);
     fName("ошибка");
+  }
+  if (fErr.includes("404")) {
+    fMsg("Файл JSON не найден");
+    fColor("error");
+    fIsErr(true);
+    fName("ошибка");
   } else {
-    fMsg("Ошибка: " + fErr);
+    fMsg("Что-то пошло не так :(");
     fColor("error");
     fIsErr(true);
     fName("ошибка");

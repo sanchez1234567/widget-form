@@ -41,6 +41,7 @@ export default function WidgetButton(props) {
         throw new Error(response.status);
       }
     } catch (err) {
+      console.log(err);
       FetchErrJson(err.message, setMsgErr, setIsErr, setButColor, setButName);
     }
   };
