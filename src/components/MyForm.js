@@ -7,7 +7,8 @@ import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
 import GenerateDocx from "../functions/GenerateDocx.js";
 import SortTags from "../functions/SortTags.js";
-import DownloadForms from "./DownloadForms.js";
+import LoadingForms from "./LoadingForms.js";
+import ErrorMessage from "./ErrorMessage.js";
 import GetHints from "../functions/GetHints.js";
 import HintField from "./HintField.js";
 import { Button, Box } from "@mui/material";
@@ -18,10 +19,18 @@ export default function MyForm(props) {
   const [oSchema, setSchema] = useState({});
   const [oUiSchema, setUiSchema] = useState({});
 
+  const [isLoad, setIsLoad] = useState(true);
+  const [isForm, setIsForm] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [msgErr, setMsgErr] = useState("Что-то пошло не так!");
+
   const docTjSchema = (templateUrl, fSchema, pSchema, cWidget) => {
+    setIsLoad(true);
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
-        throw error;
+        console.log(error);
+        setIsLoad(false);
+        setIsError(true);
       }
       let zip = new PizZip(content);
       const InspectModule = require("docxtemplater/js/inspect-module");
@@ -63,6 +72,8 @@ export default function MyForm(props) {
         }));
       }
     }
+    setIsLoad(false);
+    setIsForm(true);
   };
 
   const CustomFieldWidget = (props: WidgetProps) => {
@@ -96,9 +107,8 @@ export default function MyForm(props) {
 
   return (
     <div>
-      {JSON.stringify(props.jSchema) === "{}" ? (
-        <DownloadForms />
-      ) : (
+      {isLoad ? <LoadingForms /> : null}
+      {isForm ? (
         <Form
           schema={schema}
           onSubmit={() => GenerateDocx(document, formData)}
@@ -117,7 +127,8 @@ export default function MyForm(props) {
             </Button>
           </Box>
         </Form>
-      )}
+      ) : null}
+      {isError ? <ErrorMessage msgErr={msgErr} /> : null}
     </div>
   );
 }

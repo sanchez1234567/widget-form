@@ -32,17 +32,16 @@ export default function WidgetButton(props) {
 
   const getJsonSchema = async (bName) => {
     try {
-      const response = await fetch("http://localhost/formList.json");
-      const result = await response.json();
-      if (response.status === 200) {
+      const response = await fetch("http://localhost:5000/formList.json");
+      if (response.ok) {
+        const result = await response.json();
         await setButName(bName);
         await setSchema(result);
-      }
-      if (response.status === 404) {
-        throw new Error("404");
+      } else {
+        throw new Error(response.status);
       }
     } catch (err) {
-      FetchErrJson(err, setMsgErr, setIsErr, setButColor, setButName);
+      FetchErrJson(err.message, setMsgErr, setIsErr, setButColor, setButName);
     }
   };
 
