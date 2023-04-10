@@ -29,6 +29,7 @@ export default function MyForm(props) {
     setIsLoad(true);
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
+        HandleErrDoc(error, setMsgErr, setIsError, setIsLoad);
         throw error;
       }
       try {
@@ -40,8 +41,8 @@ export default function MyForm(props) {
         const sortTags = SortTags(tags);
         setDocument(doc);
         fSchema(sortTags, pSchema, cWidget);
-      } catch (err) {
-        HandleErrDoc(err.name, setMsgErr, setIsError, setIsLoad);
+      } catch (error) {
+        HandleErrDoc(error.name, setMsgErr, setIsError, setIsLoad);
       }
     });
   };

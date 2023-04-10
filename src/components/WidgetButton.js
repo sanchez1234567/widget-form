@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import MyForm from "./MyForm.js";
 import { Snackbar, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ErrorSnackbar from "./ErrorSnackbar.js";
 import HandleErrJson from "../functions/HandleErrJson.js";
 
 export default function WidgetButton(props) {
@@ -59,20 +60,11 @@ export default function WidgetButton(props) {
       >
         {butName}
       </Button>
-      <Snackbar
-        open={openErr}
-        message={msgErr}
-        action={
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={handleCloseErr}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        }
-      ></Snackbar>
+      <ErrorSnackbar
+        openS={openErr}
+        messageS={msgErr}
+        handleClose={handleCloseErr}
+      />
       <Dialog open={open} onClose={handleCloseForm} fullWidth={true}>
         <DialogContent>
           <MyForm url={props.url} jSchema={jSchema} />
