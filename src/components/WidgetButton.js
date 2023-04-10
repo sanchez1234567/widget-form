@@ -1,8 +1,6 @@
 import { Button, Dialog, DialogContent } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import MyForm from "./MyForm.js";
-import { Snackbar, IconButton } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 import ErrorSnackbar from "./ErrorSnackbar.js";
 import HandleErrJson from "../functions/HandleErrJson.js";
 

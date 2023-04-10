@@ -1,24 +1,24 @@
 import { TextField, Autocomplete } from "@mui/material";
 
-export default function HintField(options, label, setFunc, hintFunc) {
+export default function HintField(props) {
   return (
     <Autocomplete
       freeSolo
       clearIcon={null}
-      options={options}
+      options={props.arr}
       onInputChange={(event, newInputValue) => {
-        setFunc((prevState) => ({
+        props.setFunc((prevState) => ({
           ...prevState,
-          [label]: newInputValue,
+          [props.label]: newInputValue,
         }));
       }}
       renderInput={(params) => (
         <TextField
           required
           {...params}
-          label={label}
+          label={props.label}
           onKeyUp={(e) => {
-            hintFunc(e.target.value);
+            props.hints(e.target.value);
           }}
         />
       )}

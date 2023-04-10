@@ -94,7 +94,14 @@ export default function MyForm(props) {
       );
     };
 
-    return HintField(oHint[label] || [], label, setFormData, hints);
+    return (
+      <HintField
+        arr={oHint[label] || []}
+        label={label}
+        setFunc={setFormData}
+        hints={hints}
+      />
+    );
   };
 
   useEffect(() => {
