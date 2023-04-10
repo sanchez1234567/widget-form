@@ -10,7 +10,7 @@ import SortTags from "../functions/SortTags.js";
 import LoadingForms from "./LoadingForms.js";
 import ErrorMessage from "./ErrorMessage.js";
 import GetHints from "../functions/GetHints.js";
-import FetchErrDoc from "../functions/FetchErrDoc.js";
+import HandleErrDoc from "../functions/HandleErrDoc.js";
 import HintField from "./HintField.js";
 import { Button, Box } from "@mui/material";
 
@@ -29,16 +29,20 @@ export default function MyForm(props) {
     setIsLoad(true);
     PizZipUtils.getBinaryContent(templateUrl, function (error, content) {
       if (error) {
-        FetchErrDoc(error, setMsgErr, setIsError, setIsLoad);
+        throw error;
       }
-      let zip = new PizZip(content);
-      const InspectModule = require("docxtemplater/js/inspect-module");
-      const iModule = InspectModule();
-      const doc = new Docxtemplater(zip, { modules: [iModule] });
-      const tags = iModule.getAllTags();
-      const sortTags = SortTags(tags);
-      setDocument(doc);
-      fSchema(sortTags, pSchema, cWidget);
+      try {
+        let zip = new PizZip(content);
+        const InspectModule = require("docxtemplater/js/inspect-module");
+        const iModule = InspectModule();
+        const doc = new Docxtemplater(zip, { modules: [iModule] });
+        const tags = iModule.getAllTags();
+        const sortTags = SortTags(tags);
+        setDocument(doc);
+        fSchema(sortTags, pSchema, cWidget);
+      } catch (err) {
+        HandleErrDoc(err.name, setMsgErr, setIsError, setIsLoad);
+      }
     });
   };
 

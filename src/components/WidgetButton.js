@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import MyForm from "./MyForm.js";
 import { Snackbar, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import FetchErrJson from "../functions/FetchErrJson.js";
+import HandleErrJson from "../functions/HandleErrJson.js";
 
 export default function WidgetButton(props) {
   const [jSchema, setSchema] = useState({});
@@ -41,8 +41,7 @@ export default function WidgetButton(props) {
         throw new Error(response.status);
       }
     } catch (err) {
-      console.log(err);
-      FetchErrJson(err.message, setMsgErr, setIsErr, setButColor, setButName);
+      HandleErrJson(err.message, setMsgErr, setIsErr, setButColor, setButName);
     }
   };
 

@@ -1,11 +1,10 @@
-export default function FetchErrJson(fErr, fMsg, fIsErr, fColor, fName) {
-  if (fErr.includes("Failed to fetch")) {
+export default function HandleErrJson(fErr, fMsg, fIsErr, fColor, fName) {
+  if (String(fErr).includes("Failed to fetch")) {
     fMsg("Нет соединения с сервером");
     fColor("error");
     fIsErr(true);
     fName("ошибка");
-  }
-  if (fErr.includes("404")) {
+  } else if (String(fErr).includes("404")) {
     fMsg("Файл JSON не найден");
     fColor("error");
     fIsErr(true);
