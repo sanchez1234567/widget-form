@@ -29,9 +29,9 @@ export default function WidgetButton(props) {
     setOpen(false);
   };
 
-  const getJsonSchema = async (bName) => {
+  const getJsonSchema = async (jUrl, bName) => {
     try {
-      const response = await fetch("http://localhost:5000/formList.json");
+      const response = await fetch(jUrl);
       if (response.ok) {
         const result = await response.json();
         await setButName(bName);
@@ -45,7 +45,7 @@ export default function WidgetButton(props) {
   };
 
   useEffect(() => {
-    getJsonSchema(props.button);
+    getJsonSchema(props.jsonSchema, props.button);
   }, [props]);
 
   return (
