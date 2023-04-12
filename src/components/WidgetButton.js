@@ -45,7 +45,7 @@ export default function WidgetButton(props) {
   };
 
   useEffect(() => {
-    getJsonSchema(props.jsonSchema, props.button);
+    getJsonSchema(props.jsonschema, props.button);
   }, [props]);
 
   return (

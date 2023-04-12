@@ -10,7 +10,7 @@ widgetForm.forEach((div) => {
     <App
       url={div.dataset.url}
       button={div.dataset.button}
-      jsonSchema={div.dataset.jsonSchema}
+      jsonschema={div.dataset.jsonschema}
     />
   );
 });

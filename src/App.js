@@ -7,7 +7,7 @@ function App(props) {
         <WidgetButton
           url={props.url}
           button={props.button}
-          jsonSchema={props.jsonSchema}
+          jsonschema={props.jsonschema}
         />
       }
     </div>
