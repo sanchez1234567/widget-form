@@ -8,6 +8,7 @@ function App(props) {
           url={props.url}
           button={props.button}
           jsonschema={props.jsonschema}
+          docname={props.docname}
         />
       }
     </div>

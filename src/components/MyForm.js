@@ -6,7 +6,7 @@ import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
 import GenerateDocx from "../functions/GenerateDocx.js";
-import SortTags from "../functions/SortTags.js";
+//import SortTags from "../functions/SortTags.js";
 import LoadingForms from "./LoadingForms.js";
 import ErrorMessage from "./ErrorMessage.js";
 import GetHints from "../functions/GetHints.js";
@@ -38,9 +38,9 @@ export default function MyForm(props) {
         const iModule = InspectModule();
         const doc = new Docxtemplater(zip, { modules: [iModule] });
         const tags = iModule.getAllTags();
-        const sortTags = SortTags(tags);
+        //const sortTags = SortTags(tags);
         setDocument(doc);
-        fSchema(sortTags, pSchema, cWidget);
+        fSchema(tags, pSchema, cWidget);
       } catch (error) {
         HandleErrDoc(error.name, setMsgErr, setIsError, setIsLoad);
       }
@@ -109,7 +109,7 @@ export default function MyForm(props) {
   }, [props]);
 
   const schema: RJSFSchema = {
-    title: "Введите данные (* обязательные поля)",
+    title: props.docname,
     type: "object",
     properties: oSchema,
   };

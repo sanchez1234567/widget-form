@@ -11,6 +11,7 @@ widgetForm.forEach((div) => {
       url={div.dataset.url}
       button={div.dataset.button}
       jsonschema={div.dataset.jsonschema}
+      docname={div.dataset.docname}
     />
   );
 });

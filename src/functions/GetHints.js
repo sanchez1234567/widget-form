@@ -5,7 +5,7 @@ export default async function GetHints(queryData, fFetch) {
       return eval(strFetch);
     }
     // return fetch(
-    //   "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address",
+    //   "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/fms_unit",
     //   {
     //     method: "POST",
     //     mode: "cors",

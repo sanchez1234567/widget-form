@@ -65,7 +65,7 @@ export default function WidgetButton(props) {
       />
       <Dialog open={open} onClose={handleCloseForm} fullWidth={true}>
         <DialogContent>
-          <MyForm url={props.url} jSchema={jSchema} />
+          <MyForm url={props.url} jSchema={jSchema} docname={props.docname} />
         </DialogContent>
       </Dialog>
     </div>
