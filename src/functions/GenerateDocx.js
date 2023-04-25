@@ -1,6 +1,6 @@
 import { saveAs } from "file-saver";
 
-export default function GenerateDocx(docTemplate, jsonObj) {
+export default function GenerateDocx(docTemplate, jsonObj, outputName) {
   docTemplate.setData(jsonObj);
   docTemplate.render();
   let out = docTemplate.getZip().generate({
@@ -8,5 +8,5 @@ export default function GenerateDocx(docTemplate, jsonObj) {
     mimeType:
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   });
-  saveAs(out, "output.docx");
+  saveAs(out, `${outputName}.docx`);
 }
