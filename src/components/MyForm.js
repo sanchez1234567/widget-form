@@ -109,7 +109,7 @@ export default function MyForm(props) {
   }, [props]);
 
   const schema: RJSFSchema = {
-    title: props.docname,
+    //title: props.docname,
     description: 'Введите данные или поставьте прочерк ("-")',
     type: "object",
     properties: oSchema,

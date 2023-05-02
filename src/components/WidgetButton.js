@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import MyForm from "./MyForm.js";
 import ErrorSnackbar from "./ErrorSnackbar.js";
 import HandleErrJson from "../functions/HandleErrJson.js";
+import DialogHeader from "./DialogHeader.js";
 
 export default function WidgetButton(props) {
   const [jSchema, setSchema] = useState({});
@@ -63,7 +64,8 @@ export default function WidgetButton(props) {
         messageS={msgErr}
         handleClose={handleCloseErr}
       />
-      <Dialog open={open} onClose={handleCloseForm} fullWidth={true}>
+      <Dialog open={open} onClose={handleCloseForm} fullScreen={true}>
+        <DialogHeader docname={props.docname} closeDialog={handleCloseForm} />
         <DialogContent>
           <MyForm url={props.url} jSchema={jSchema} docname={props.docname} />
         </DialogContent>
