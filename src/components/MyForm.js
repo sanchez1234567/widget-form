@@ -110,7 +110,7 @@ export default function MyForm(props) {
 
   const schema: RJSFSchema = {
     //title: props.docname,
-    description: 'Введите данные или поставьте прочерк ("-")',
+    description: "Ввести данные или скачать пустую форму",
     type: "object",
     properties: oSchema,
   };
@@ -123,7 +123,9 @@ export default function MyForm(props) {
       {isForm ? (
         <Form
           schema={schema}
-          onSubmit={() => GenerateDocx(document, formData, props.docname)}
+          onSubmit={() =>
+            GenerateDocx(document, formData, oSchema, props.docname)
+          }
           uiSchema={uiSchema}
           validator={validator}
           onChange={(e) => setFormData(e.formData)}
