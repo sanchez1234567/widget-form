@@ -124,7 +124,13 @@ export default function MyForm(props) {
         <Form
           schema={schema}
           onSubmit={() =>
-            GenerateDocx(document, formData, oSchema, props.docname)
+            GenerateDocx(
+              document,
+              formData,
+              oSchema,
+              props.docname,
+              props.closeForm
+            )
           }
           uiSchema={uiSchema}
           validator={validator}

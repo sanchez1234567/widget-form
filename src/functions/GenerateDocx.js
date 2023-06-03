@@ -5,7 +5,8 @@ export default function GenerateDocx(
   docTemplate,
   formDataObj,
   oSchemaObj,
-  outputName
+  outputName,
+  closeForm
 ) {
   docTemplate.setData(AutoFillField(oSchemaObj, formDataObj));
   docTemplate.render();
@@ -14,5 +15,6 @@ export default function GenerateDocx(
     mimeType:
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   });
+  closeForm(false);
   saveAs(out, `${outputName}.docx`);
 }
